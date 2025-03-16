@@ -3,6 +3,9 @@ import { remark } from "remark";
 import html from "remark-html";
 import Link from "next/link";
 
+// Define params type for Next.js 15
+type Params = Promise<{ slug: string }>;
+
 export async function generateStaticParams() {
   const paths = getAllProjectIds();
   return paths.map((path) => ({
@@ -10,12 +13,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  // Add await for params
+export async function generateMetadata({ params }: { params: Params }) {
   const resolvedParams = await params;
   const project = getProjectData(resolvedParams.slug);
 
@@ -35,12 +33,7 @@ async function markdownToHtml(markdown: string) {
   return result.toString();
 }
 
-export default async function Project({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  // Add await for params
+export default async function Project({ params }: { params: Params }) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
   const project = getProjectData(slug);

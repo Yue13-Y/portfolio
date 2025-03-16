@@ -8,6 +8,9 @@ import { format } from "date-fns";
 import Link from "next/link";
 import ReadingProgressBar from "@/components/ui/ReadingProgressBar";
 
+// Define params type for Next.js 15
+type Params = Promise<{ slug: string }>;
+
 export async function generateStaticParams() {
   const paths = getAllNoteIds();
   return paths.map((path) => ({
@@ -15,11 +18,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export async function generateMetadata({ params }: { params: Params }) {
   const resolvedParams = await params;
   const note = getNoteData(resolvedParams.slug);
   return {
@@ -39,7 +38,7 @@ async function markdownToHtml(markdown: string) {
   return result.toString();
 }
 
-export default async function Note({ params }: { params: { slug: string } }) {
+export default async function Note({ params }: { params: Params }) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
   const note = getNoteData(slug);
