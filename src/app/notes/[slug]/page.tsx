@@ -20,7 +20,8 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }) {
-  const note = getNoteData(params.slug);
+  const resolvedParams = await params;
+  const note = getNoteData(resolvedParams.slug);
   return {
     title: `${note.title} | Your Name`,
     description: note.excerpt,
@@ -39,7 +40,8 @@ async function markdownToHtml(markdown: string) {
 }
 
 export default async function Note({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
   const note = getNoteData(slug);
   const contentHtml = await markdownToHtml(note.content);
 
@@ -58,7 +60,6 @@ export default async function Note({ params }: { params: { slug: string } }) {
 
         <article>
           <div className="mb-8">
-
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {format(new Date(note.date), "MMMM d, yyyy")}
             </p>

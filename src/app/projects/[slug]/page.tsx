@@ -1,6 +1,3 @@
-// Location: ./src/app/projects/[slug]/page.tsx
-// Name: page.tsx
-
 import { getProjectData, getAllProjectIds } from "@/lib/projects";
 import { remark } from "remark";
 import html from "remark-html";
@@ -18,7 +15,9 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }) {
-  const project = getProjectData(params.slug);
+  // Add await for params
+  const resolvedParams = await params;
+  const project = getProjectData(resolvedParams.slug);
 
   return {
     title: `${project.title} | Your Name`,
@@ -41,7 +40,9 @@ export default async function Project({
 }: {
   params: { slug: string };
 }) {
-  const { slug } = params;
+  // Add await for params
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
   const project = getProjectData(slug);
   const contentHtml = await markdownToHtml(project.content);
 
